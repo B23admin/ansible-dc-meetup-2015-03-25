@@ -1,0 +1,33 @@
+---
+- name: Outside (droplets)
+  hosts: local
+  connection: local
+  roles:
+    - digital_ocean_topology
+
+- name: Open sesame
+  hosts: digital_ocean
+  gather_facts: no
+  tasks:
+    - include: roles/common/tasks/knock.yml
+
+- name: Inside (bootstrap)
+  hosts: digital_ocean
+  gather_facts: no
+  remote_user: root
+  sudo: yes
+  roles:
+    - ubuntu_bootstrap
+
+- name: Inside (knockd)
+  hosts: digital_ocean
+  remote_user: ansible
+  sudo: yes
+  roles:
+    - knockd
+
+- name: Close sesame
+  hosts: digital_ocean
+  gather_facts: no
+  tasks:
+    - include: roles/common/tasks/unknock.yml

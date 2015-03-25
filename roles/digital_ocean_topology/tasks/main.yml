@@ -1,0 +1,26 @@
+---
+- name: provision droplets
+  register: droplets
+  digital_ocean:
+    state: present
+    name: ansible-meetup-{{item}}
+    unique_name: true
+    region_id: '{{ digital_ocean_region_id }}'
+    size_id: '{{ digital_ocean_size_id }}'
+    image_id: 9801950 # Ubuntu
+    ssh_key_ids: '{{ digital_ocean_ssh_key_id }}'
+    wait_timeout: 600
+  with_items:
+    - 1
+
+- name: wait for droplet SSH
+  wait_for: host={{item.droplet.ip_address}} port=22 delay=2 timeout=320 state=started
+  with_items: droplets.results
+  when: item.changed
+
+- add_host:
+    name: '{{item.droplet.ip_address}}'
+    groups: digital_ocean
+    needs_bootstrap: '{{ item.changed }}'
+    knock_sequence: '{{ knock_sequence }}'
+  with_items: droplets.results

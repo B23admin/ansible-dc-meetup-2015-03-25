@@ -1,0 +1,4 @@
+---
+- name: unknock
+  sudo: no
+  local_action: command /usr/local/bin/knock -d 30 {{inventory_hostname}} {{knock_sequence | reverse | join(' ')}}

@@ -1,0 +1,22 @@
+---
+- name: Ensure knockd installed
+  apt:
+    name: knockd
+    state: present
+    update_cache: yes
+
+- name: Enable knockd
+  lineinfile:
+    state:  present
+    dest:   /etc/default/knockd
+    regexp: '^START_KNOCKD'
+    line:   'START_KNOCKD=1'
+  notify:
+    - restart knockd
+
+- name: Configure knockd
+  template:
+    src: knockd.conf
+    dest: /etc/knockd.conf
+  notify:
+    - restart knockd
