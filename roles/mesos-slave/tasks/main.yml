@@ -27,12 +27,16 @@
   notify:
     - restart mesos-slave
 
-- name: Mesos and Marathon Hostname and IP
+- name: Mesos IP
+  template:
+    src: ip
+    dest: /etc/mesos-slave/ip
+  notify:
+    - restart mesos-slave
+
+- name: Mesos Hostname
   template:
     src: hostname
-    dest: '{{ item }}'
-  with_items:
-    - /etc/mesos-slave/ip
-    - /etc/mesos-slave/hostname
+    dest: /etc/mesos-slave/hostname
   notify:
     - restart mesos-slave

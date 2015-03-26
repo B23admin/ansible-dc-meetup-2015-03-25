@@ -38,13 +38,19 @@
     - restart mesos-master
     - restart marathon
 
-- name: Mesos Hostname and IP
+- name: Mesos Hostname
   template:
     src: hostname
-    dest: '{{ item }}'
-  with_items:
-    - /etc/mesos-master/ip
-    - /etc/mesos-master/hostname
+    dest: /etc/mesos-master/hostname
+  notify:
+    - restart zookeeper
+    - restart mesos-master
+    - restart marathon
+
+- name: Mesos IP
+  template:
+    src: ip
+    dest: /etc/mesos-master/ip
   notify:
     - restart zookeeper
     - restart mesos-master
