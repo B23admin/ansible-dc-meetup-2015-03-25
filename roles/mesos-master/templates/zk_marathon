@@ -1,0 +1,1 @@
+zk://{% for host in groups['mesos_masters'] %}{{ hostvars[host]['private_ip'] }}:2181{% if not loop.last %},{% endif %}{% endfor %}/marathon

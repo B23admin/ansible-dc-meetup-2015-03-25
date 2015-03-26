@@ -1,0 +1,86 @@
+---
+- include: ../../common/tasks/mesosphere_apt.yml
+
+- name: Install mesosphere
+  apt:
+    state: present
+    name: mesosphere
+
+- name: Marathon config dir
+  file:
+    state: directory
+    path: /etc/marathon/conf
+
+- name: Zookeeper id
+  template:
+    src: myid
+    dest: /etc/zookeeper/conf/myid
+  notify:
+    - restart zookeeper
+    - restart mesos-master
+    - restart marathon
+
+- name: Zookeeper config
+  template:
+    src: zoo.cfg
+    dest: /etc/zookeeper/conf/zoo.cfg
+  notify:
+    - restart zookeeper
+    - restart mesos-master
+    - restart marathon
+
+- name: Mesos Quorum
+  template:
+    src: quorum
+    dest: /etc/mesos-master/quorum
+  notify:
+    - restart zookeeper
+    - restart mesos-master
+    - restart marathon
+
+- name: Mesos Hostname and IP
+  template:
+    src: hostname
+    dest: '{{ item }}'
+  with_items:
+    - /etc/mesos-master/ip
+    - /etc/mesos-master/hostname
+  notify:
+    - restart zookeeper
+    - restart mesos-master
+    - restart marathon
+
+- name: Mesos zk
+  template:
+    src: zk_mesos
+    dest: '{{ item }}'
+  with_items:
+    - /etc/mesos/zk
+    - /etc/marathon/conf/master
+  notify:
+    - restart zookeeper
+    - restart mesos-master
+    - restart marathon
+
+- name: Marathon zk
+  template:
+    src: zk_marathon
+    dest: /etc/marathon/conf/zk
+  notify:
+    - restart zookeeper
+    - restart mesos-master
+    - restart marathon
+
+- name: Mesos slave override
+  template:
+    src: mesos-slave.override
+    dest: /etc/init/mesos-slave.override
+  notify:
+    - restart zookeeper
+    - restart mesos-master
+    - restart marathon
+
+- name: Stop Mesos slave
+  service:
+    state: stopped
+    name: mesos-slave

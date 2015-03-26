@@ -1,0 +1,38 @@
+---
+- include: ../../common/tasks/mesosphere_apt.yml
+- name: Install mesos
+  apt:
+    state: present
+    name: mesos
+
+- name: Stop Zookeeper and Mesos
+  service:
+    state: stopped
+    name: '{{ item }}'
+  with_items:
+    - zookeeper
+    - mesos-master
+
+- name: Zookeeper override
+  template:
+    src: zookeeper.override
+    dest: /etc/init/zookeeper.override
+  notify:
+    - restart mesos-slave
+
+- name: Mesos master override
+  template:
+    src: mesos-master.override
+    dest: /etc/init/mesos-master.override
+  notify:
+    - restart mesos-slave
+
+- name: Mesos and Marathon Hostname and IP
+  template:
+    src: hostname
+    dest: '{{ item }}'
+  with_items:
+    - /etc/mesos-slave/ip
+    - /etc/mesos-slave/hostname
+  notify:
+    - restart mesos-slave

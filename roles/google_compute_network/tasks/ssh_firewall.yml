@@ -1,0 +1,13 @@
+---
+- name: (dis)allow ssh
+  gce_net:
+    state: '{{ state }}'
+    name: '{{ gce_network.name }}'
+    fwname: '{{ item.name }}'
+    allowed: '{{ item.allowed }}'
+    src_range: 0.0.0.0/0
+    project_id: "{{ google_project_id }}"
+    service_account_email: "{{ google_project_email }}"
+    pem_file: "{{ google_project_pem }}"
+  with_items:
+    - {name: 'ssh', allowed: 'tcp:22'}

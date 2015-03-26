@@ -1,0 +1,34 @@
+---
+- name: create network
+  register: gce_network
+  gce_net:
+    state: present
+    name: privatenet
+    ipv4_range: '{{ gce_network_cidr }}'
+    project_id: "{{ google_project_id }}"
+    service_account_email: "{{ google_project_email }}"
+    pem_file: "{{ google_project_pem }}"
+
+- name: external firewall rules
+  gce_net:
+    state: active
+    name: '{{ gce_network.name }}'
+    fwname: '{{ item.fwname }}'
+    allowed: '{{ item.allowed }}'
+    src_range: 0.0.0.0/0
+    project_id: "{{ google_project_id }}"
+    service_account_email: "{{ google_project_email }}"
+    pem_file: "{{ google_project_pem }}"
+  with_items:
+    - {fwname: 'mesos-web', allowed: 'tcp:5050,8080'}
+
+- name: internal firewall rule
+  gce_net:
+    state: active
+    name: '{{ gce_network.name }}'
+    fwname: internal
+    allowed: 'tcp:1-65535'
+    src_range: '{{ gce_network_cidr }}'
+    project_id: "{{ google_project_id }}"
+    service_account_email: "{{ google_project_email }}"
+    pem_file: "{{ google_project_pem }}"

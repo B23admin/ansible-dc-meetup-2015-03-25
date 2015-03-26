@@ -1,0 +1,52 @@
+---
+- name: Outside (network and instances)
+  hosts: local
+  connection: local
+  roles:
+    - google_compute_network
+    - google_compute_instances
+
+- name: Open sesame
+  hosts: local
+  connection: local
+  tasks:
+    - include: roles/google_compute_network/tasks/ssh_firewall.yml
+      vars:
+        state: active
+
+- name: Inside (bootstrap)
+  hosts: google_compute
+  gather_facts: no
+  remote_user: ansible
+  sudo: yes
+  roles:
+    - ubuntu_bootstrap
+
+- name: Inside (mesos masters)
+  hosts: mesos_masters
+  remote_user: ansible
+  sudo: yes
+  roles:
+    - mesos-master
+
+- name: Inside (mesos slaves)
+  hosts: mesos_slaves
+  remote_user: ansible
+  sudo: yes
+  roles:
+    - mesos-slave
+
+- name: Outside (Docker app)
+  hosts: local
+  connection: local
+  roles:
+    # - docker_nginx
+
+# Fails due to a bug in gce_net module
+# - name: Close sesame
+#   hosts: local
+#   connection: local
+#   tasks:
+#     - include: roles/google_compute_network/tasks/ssh_firewall.yml
+#       vars:
+#         state: absent

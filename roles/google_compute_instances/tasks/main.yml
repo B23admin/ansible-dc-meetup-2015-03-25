@@ -1,0 +1,31 @@
+---
+- name: Provision instances
+  register: gce_instances
+  gce:
+    state: active
+    instance_names: mesos-{{item}}
+    zone: us-central1-a
+    machine_type: n1-standard-2
+    image: ubuntu-1404-trusty-v20150316
+    network: '{{ gce_network.name }}'
+    project_id: '{{ google_project_id }}'
+    service_account_email: '{{ google_project_email }}'
+    pem_file: '{{ google_project_pem }}'
+    metadata:
+      sshKeys: ansible:{{ ssh_key }} # You'll need to patch gce module as per https://github.com/ansible/ansible-modules-core/issues/154
+  with_sequence: start=1 end=6
+
+- name: wait for instance SSH
+  wait_for: host={{item.instance_data[0].public_ip}} port=22 delay=2 timeout=320 state=started
+  with_items: gce_instances.results
+  when: item.changed
+
+- add_host:
+    name: '{{item.1.instance_data[0].public_ip}}'
+    groups: google_compute,{{ "mesos_masters" if item.0 is odd else "mesos_slaves" }}
+    needs_bootstrap: '{{ item.1.changed }}'
+    knock_sequence: '{{ knock_sequence }}'
+    zk_id: '{{ item.0 }}'
+    private_ip: '{{item.1.instance_data[0].private_ip}}'
+    ssh_key: '{{ ssh_key }}'
+  with_indexed_items: gce_instances.results

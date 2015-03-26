@@ -1,0 +1,9 @@
+---
+- name: Mesosphere apt key
+  apt_key:
+    state: present
+    keyserver: keyserver.ubuntu.com
+    id: E56151BF
+
+- name: Mesosphere apt repo
+  apt_repository: state=present repo="deb http://repos.mesosphere.io/ubuntu trusty main"

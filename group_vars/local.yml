@@ -4,3 +4,7 @@ ssh_key: '{{ lookup("file", "/Users/bobby/.ssh/id_rsa.pub") }}'
 digital_ocean_region_id: 8
 digital_ocean_size_id: 63
 digital_ocean_ssh_key_id: 691840
+gce_network_cidr: 10.240.16.0/24
+google_project_id: stackspace-testing
+google_project_email: 753742230792-eflovjn7ft82ftk5tf9d4uuv8tgh9a2b@developer.gserviceaccount.com
+google_project_pem: google.pem

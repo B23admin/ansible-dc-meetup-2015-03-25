@@ -1,0 +1,15 @@
+---
+- name: restart zookeeper
+  service:
+    state: restarted
+    name: zookeeper
+
+- name: restart mesos-master
+  service:
+    state: restarted
+    name: mesos-master
+
+- name: restart marathon
+  service:
+    state: restarted
+    name: marathon
