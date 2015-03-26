@@ -4,7 +4,7 @@
   user: name=ansible state=present group=sudo shell=/bin/bash
 
 - name: set authorized key
-  authorized_key: user=ansible key="{{ lookup('file', '/Users/bobby/.ssh/id_rsa.pub') }}"
+  authorized_key: user=ansible key="{{ ssh_key }}"
 
 # HT: http://will-bloggs-too.com/2014/08/21/adding-files-to-etcsudoers-d-using-ansible/
 - name: add ansible user to sudoers

@@ -1,5 +1,6 @@
 ---
 knock_sequence: [1983, 1986, 2008, 2015]
+ssh_key: '{{ lookup("file", "/Users/bobby/.ssh/id_rsa.pub") }}'
 digital_ocean_region_id: 8
 digital_ocean_size_id: 63
 digital_ocean_ssh_key_id: 691840

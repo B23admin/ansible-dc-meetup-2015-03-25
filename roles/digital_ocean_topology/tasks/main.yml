@@ -23,4 +23,5 @@
     groups: digital_ocean
     needs_bootstrap: '{{ item.changed }}'
     knock_sequence: '{{ knock_sequence }}'
+    ssh_key: '{{ ssh_key }}'
   with_items: droplets.results

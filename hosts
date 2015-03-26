@@ -2,3 +2,9 @@
 localhost ansible_connection=local
 
 [digital_ocean]
+
+[google_compute]
+
+[mesos_masters]
+
+[mesos_slaves]
