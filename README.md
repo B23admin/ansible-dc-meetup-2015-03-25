@@ -1,5 +1,5 @@
 These playbooks were developed and tested on OS X with dependencies
-installed via `[homebrew](http://brew.sh/)`.  YMMV on other platforms.
+installed via [`homebrew`](http://brew.sh/).  YMMV on other platforms.
 
 # Digital Ocean Dev Host
 
