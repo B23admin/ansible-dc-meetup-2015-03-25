@@ -20,6 +20,13 @@
   notify:
     - restart mesos-slave
 
+- name: Mesos zk
+  template:
+    src: ../../mesos-master/templates/zk_mesos
+    dest: /etc/mesos/zk
+  notify:
+    - restart mesos-slave
+
 - name: Mesos master override
   template:
     src: mesos-master.override
@@ -29,14 +36,14 @@
 
 - name: Mesos IP
   template:
-    src: ip
+    src: ../../mesos-master/templates/ip
     dest: /etc/mesos-slave/ip
   notify:
     - restart mesos-slave
 
 - name: Mesos Hostname
   template:
-    src: hostname
+    src: ../../mesos-master/templates/hostname
     dest: /etc/mesos-slave/hostname
   notify:
     - restart mesos-slave
