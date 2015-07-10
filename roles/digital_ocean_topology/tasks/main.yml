@@ -7,7 +7,7 @@
     unique_name: true
     region_id: '{{ digital_ocean_region_id }}'
     size_id: '{{ digital_ocean_size_id }}'
-    image_id: 9801950 # Ubuntu
+    image_id: '{{ digital_ocean_image_id }}'
     ssh_key_ids: '{{ digital_ocean_ssh_key_id }}'
     wait_timeout: 600
   with_items:

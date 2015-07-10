@@ -4,9 +4,9 @@
   gce:
     state: active
     instance_names: mesos-{{item}}
-    zone: us-central1-a
-    machine_type: n1-standard-2
-    image: ubuntu-1404-trusty-v20150316
+    zone: '{{ google_zone }}'
+    machine_type: '{{ google_machine_type }}'
+    image: '{{ google_image }}'
     network: '{{ gce_network.name }}'
     project_id: '{{ google_project_id }}'
     service_account_email: '{{ google_project_email }}'
